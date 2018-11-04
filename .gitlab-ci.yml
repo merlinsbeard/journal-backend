@@ -1,0 +1,71 @@
+image: docker:latest
+
+stages:
+  - test
+  - container_push
+  - deploy_container
+
+before_script:
+  - apk update
+  - apk add git openssh
+  - mkdir -p ~/.ssh
+  - echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+  - ssh-keyscan -H $CLUSTER_DOMAIN > ~/.ssh/known_hosts
+  - chmod 600 -R ~/.ssh
+  - git config --global user.email "$USER_EMAIL"
+  - git config --global user.name "$USER_NAME"
+
+variables:
+  GIT_SUBMODULE_STRATEGY: normal
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+
+test_commits:
+  image: python:3.7
+  stage: test
+  before_script:
+    - echo "DATABASE_URL=psql://postgres:postgres@postgres/test" > config/prod.env
+    - echo "SECRET_KEY='gitlabsecret21321321'" >> config/prod.env
+    - echo "EMAIL_TO='hallocaffeine@gmail.com'" >> config/prod.env
+    - echo "DEBUG=True" >> config/prod.env
+    - echo "ALLOWED_HOSTS=*,localhost" >> config/prod.env
+    - echo "CORS_ORIGIN_ALLOW_ALL=False" >> config/prod.env
+    - echo "CORS_ORIGIN_WHITELIST=localhost:8000,localhost:8080" >> config/prod.env
+    - echo "CORS_ALLOW_METHODS=OPTIONS,GET" >> config/prod.env
+    - pip install -r requirements.txt
+  script:
+    - python manage.py test
+  variables:
+    POSTGRES_DB: "test"
+  services:
+    - postgres:10
+
+test_debug:
+  stage: test
+  script:
+    - echo $CI_COMMIT_REF_NAME
+  only:
+    - debug
+
+push_docker:
+  stage: container_push
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME .
+    - docker push $CI_REGISTRY_IMAGE
+  services:
+    - docker:dind
+  only:
+    - tags
+
+deploy:
+  stage: deploy_container
+  script:
+    - echo "Deploying $CI_COMMIT_REF_NAME"
+    - ssh -o StrictHostKeyChecking=no $CLUSTER_USER@$CLUSTER_DOMAIN "export ARTWORK_VERSION=$CI_COMMIT_REF_NAME; cd code/artwork; ./script.sh"
+  when: manual
+  environment:
+    name: production
+    url: https://benray.dailywarrior.ph
+  only:
+    - tags
