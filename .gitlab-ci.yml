@@ -62,7 +62,7 @@ deploy:
   stage: deploy_container
   script:
     - echo "Deploying $CI_COMMIT_REF_NAME"
-    - ssh -o StrictHostKeyChecking=no $CLUSTER_USER@$CLUSTER_DOMAIN "export ARTWORK_VERSION=$CI_COMMIT_REF_NAME; cd code/artwork; ./script.sh"
+    - ssh -o StrictHostKeyChecking=no $CLUSTER_USER@$CLUSTER_DOMAIN "export JOURNAL_VERSION=$CI_COMMIT_REF_NAME; cd code/journal; ./script.sh"
   when: manual
   environment:
     name: production
