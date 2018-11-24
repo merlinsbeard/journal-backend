@@ -32,6 +32,7 @@ test_commits:
     - echo "CORS_ORIGIN_ALLOW_ALL=False" >> config/prod.env
     - echo "CORS_ORIGIN_WHITELIST=localhost:8000,localhost:8080" >> config/prod.env
     - echo "CORS_ALLOW_METHODS=OPTIONS,GET" >> config/prod.env
+    - echo "GS_BUCKET_NAME=''" >> config/prod.env
     - pip install -r requirements.txt
   script:
     - python manage.py test
