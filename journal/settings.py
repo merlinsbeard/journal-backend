@@ -134,3 +134,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 CORS_ORIGIN_ALLOW_ALL = env.bool('CORS_ORIGIN_ALLOW_ALL')
 CORS_ORIGIN_WHITELIST = env.tuple('CORS_ORIGIN_WHITELIST')
 CORS_ALLOW_METHODS = env.tuple('CORS_ALLOW_METHODS')
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = env('GS_BUCKET_NAME')

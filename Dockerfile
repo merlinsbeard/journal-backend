@@ -18,6 +18,7 @@ RUN ["pip" ,"install", "-r", "requirements.txt"]
 ENV DJANGO_SETTINGS_MODULE="journal.settings"
 ENV CONFIG_FILE="/journal/config/prod.env"
 ENV GUNICORN_WORKERS="4"
+ENV GOOGLE_APPLICATION_CREDENTIALS="/secrets/secret.json"
 
 COPY . /journal
 
