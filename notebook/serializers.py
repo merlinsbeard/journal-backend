@@ -14,6 +14,7 @@ class PageSerializer(serializers.ModelSerializer):
                     many=True,
                     read_only=True,
                     slug_field='name')
+    banner = serializers.ImageField(max_length=None)
 
     class Meta:
         model = Page
@@ -24,5 +25,6 @@ class PageSerializer(serializers.ModelSerializer):
             'content',
             'date_created',
             'date_updated',
-            'categories'
+            'categories',
+            'banner',
         )

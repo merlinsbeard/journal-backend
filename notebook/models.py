@@ -10,6 +10,7 @@ class Page(models.Model):
     is_active = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
+    banner = models.ImageField(upload_to='journal', blank=True)
 
     def __str__(self):
         return self.title
@@ -40,3 +41,12 @@ class PageCategory(models.Model):
 
     class Meta:
         verbose_name_plural = "Page Categories"
+
+
+class PageMedia(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True)
+    image = models.ImageField(upload_to='journal')
+
+    def __str__(self):
+        return self.name
