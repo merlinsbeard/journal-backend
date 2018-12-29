@@ -1,6 +1,17 @@
 #!/bin/sh
-python manage.py migrate
-python manage.py collectstatic --noinput
+
+set -e
+
+if [ "$DJANGO_MIGRATE" = "on" ]; then
+    echo "Run migration"
+    python manage.py migrate
+fi
+
+if [ "$DJANGO_COLLECTSTATIC" = "on" ]; then
+    echo "Run Collectstatic"
+    python manage.py collectstatic --noinput
+fi
+
 echo Starting Gunicorn.
 exec gunicorn journal.wsgi:application \
     --bind 0.0.0.0:8000 \
@@ -10,4 +21,3 @@ exec gunicorn journal.wsgi:application \
     --access-logfile - \
     --error-logfile - \
 "$@"
-echo woot
