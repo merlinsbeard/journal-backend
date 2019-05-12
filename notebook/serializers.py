@@ -1,5 +1,7 @@
+import markdown2
 from rest_framework import serializers
 from .models import Page, Category
+from django.conf import settings
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -31,6 +33,5 @@ class PageSerializer(serializers.ModelSerializer):
         )
 
     def get_content(self, obj):
-        import markdown2
-        content = markdown2.markdown(obj.content)
+        content = markdown2.markdown(obj.content, extras=settings.MARKDOWN_EXTRAS)
         return content
