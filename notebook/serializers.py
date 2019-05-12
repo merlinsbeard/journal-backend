@@ -15,6 +15,7 @@ class PageSerializer(serializers.ModelSerializer):
                     read_only=True,
                     slug_field='name')
     banner = serializers.ImageField(max_length=None)
+    content = serializers.SerializerMethodField()
 
     class Meta:
         model = Page
@@ -28,3 +29,8 @@ class PageSerializer(serializers.ModelSerializer):
             'categories',
             'banner',
         )
+
+    def get_content(self, obj):
+        import markdown2
+        content = markdown2.markdown(obj.content)
+        return content
