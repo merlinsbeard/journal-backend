@@ -16,7 +16,8 @@ services:
       - journal
     environment:
       - DJANGO_MIGRATE=off
-      - DJANGO_COLLECTSTATIC=on
+      - DJANGO_COLLECTSTATIC=off
+      - IS_PROD=true
   db:
     image: postgres:latest
     volumes:

@@ -1,6 +1,7 @@
 FROM python:3.7-alpine
-LABEL maintainer="benpaat@dailywarrior.ph"
+LABEL maintainer="me@benpaat.xyz"
 
+ENV PYTHONUNBUFFERED=1
 RUN apk update && \
     apk --no-cache add  \
       git \
@@ -21,6 +22,7 @@ ENV DJANGO_COLLECTSTATIC="off"
 ENV CONFIG_FILE="/journal/config/prod.env"
 ENV GUNICORN_WORKERS="4"
 ENV GOOGLE_APPLICATION_CREDENTIALS="/secrets/secret.json"
+ENV IS_PROD="true"
 
 COPY . /journal
 
