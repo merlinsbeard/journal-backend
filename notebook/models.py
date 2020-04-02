@@ -1,5 +1,26 @@
 from django.db import models
 from django.utils.text import slugify
+from django.conf import settings
+from django.utils.translation import gettext_lazy as _
+from markdown import markdown
+
+
+class Tag(models.Model):
+    name = models.CharField(_('tag'), max_length=100)
+    slug = models.SlugField(unique=True, max_length=255)
+
+
+    class Meta:
+        verbose_name = "Tag"
+        verbose_name_plural = "Tags"
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Tag, self).save(*args, **kwargs)
 
 
 class Page(models.Model):
@@ -11,6 +32,7 @@ class Page(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
     banner = models.ImageField(upload_to='journal', blank=True)
+    tags = models.ManyToManyField(Tag, blank=True)
 
     def __str__(self):
         return self.title
@@ -20,10 +42,15 @@ class Page(models.Model):
             self.slug = slugify(self.title)
         super(Page, self).save(*args, **kwargs)
 
+    @property
+    def html_content(self):
+        content = markdown(
+            self.content, extensions=['fenced_code'])
+        return content
+
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
-    page = models.ManyToManyField(Page, related_name='categories')
 
     def __str__(self):
         return self.name
