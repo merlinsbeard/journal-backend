@@ -3,10 +3,22 @@ from .models import Page, PageCategory, Category
 from rest_framework import generics, viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class PageList(generics.ListCreateAPIView):
     queryset = Page.objects.filter(is_active=True).order_by('-date_updated')
     serializer_class = PageSerializer
+
+    def get_queryset(self):
+        qs = self.queryset
+        tags = self.request.query_params.get('tags', None)
+        if tags:
+            tags = tags.split(',')
+            qs = qs.filter(tags__name__in=tags)
+        return qs
 
 
 class PageDetail(generics.RetrieveUpdateAPIView):
