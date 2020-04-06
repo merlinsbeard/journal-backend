@@ -9,11 +9,10 @@ logger = logging.getLogger(__name__)
 
 
 class PageList(generics.ListCreateAPIView):
-    queryset = Page.objects.filter(is_active=True).order_by('-date_updated')
     serializer_class = PageSerializer
 
     def get_queryset(self):
-        qs = self.queryset
+        qs = Page.objects.filter(is_active=True).order_by('-date_updated')
         tags = self.request.query_params.get('tags', None)
         if tags:
             tags = tags.split(',')
