@@ -29,8 +29,8 @@ test_commits:
     - echo "EMAIL_TO='hallocaffeine@gmail.com'" >> config/prod.env
     - echo "DEBUG=True" >> config/prod.env
     - echo "ALLOWED_HOSTS=*,localhost" >> config/prod.env
-    - echo "CORS_ORIGIN_ALLOW_ALL=False" >> config/prod.env
-    - echo "CORS_ORIGIN_WHITELIST=localhost:8000,localhost:8080" >> config/prod.env
+    - echo "CORS_ORIGIN_ALLOW_ALL=True" >> config/prod.env
+    - echo "CORS_ORIGIN_WHITELIST=http://localhost:8000,http://localhost:8080,https://localhost:8000" >> config/prod.env
     - echo "CORS_ALLOW_METHODS=OPTIONS,GET" >> config/prod.env
     - echo "GS_BUCKET_NAME=''" >> config/prod.env
     - pip install -r requirements.txt
