@@ -48,9 +48,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'adminsortable2',
 
     'notebook',
-    'me'
+    'me',
+    'works'
 ]
 
 MIDDLEWARE = [
@@ -139,6 +141,7 @@ CORS_ORIGIN_WHITELIST = env.tuple('CORS_ORIGIN_WHITELIST')
 CORS_ALLOW_METHODS = env.tuple('CORS_ALLOW_METHODS')
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 GS_BUCKET_NAME = env('GS_BUCKET_NAME')
+GS_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/"
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
