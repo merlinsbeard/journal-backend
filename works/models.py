@@ -14,7 +14,8 @@ class Work(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=False)
-    banner = models.ImageField(upload_to="work", blank=True, null=True)
+    banner = models.FileField(upload_to="work", blank=True, null=True)
+    link = models.URLField(blank=True, null=True)
 
     class Meta():
         ordering = ['order']
