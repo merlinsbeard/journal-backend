@@ -3,6 +3,8 @@ from django.utils.text import slugify
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from markdown import markdown
+from django.db.models.functions import Coalesce
+from django.db.models.aggregates import Max
 
 
 class Work(models.Model):
@@ -14,11 +16,11 @@ class Work(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=False)
-    banner = models.FileField(upload_to="work", blank=True, null=True)
+    banner = models.ImageField(upload_to="work", blank=True, null=True)
     link = models.URLField(blank=True, null=True)
 
     class Meta():
-        ordering = ['order']
+        ordering = ['-order']
 
     def __str__(self):
         return self.title
@@ -26,6 +28,9 @@ class Work(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
+
+        if not self.order:
+            self.order = Work.objects.aggregate(max_order=Coalesce(Max('order'), 0))['max_order'] + 1
         super(Work, self).save(*args, **kwargs)
 
     @property
