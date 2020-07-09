@@ -67,5 +67,5 @@ class WorkViewset(
         create_or_get_tech(self.get_object(), techs_data)
         return super().update(request, *args, **kwargs)
 
-    queryset = Work.objects.all()
+    queryset = Work.objects.filter(is_active=True).order_by('-order')
     serializer_class = WorkSerializer

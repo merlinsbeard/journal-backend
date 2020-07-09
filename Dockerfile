@@ -8,7 +8,8 @@ RUN apk update && \
       build-base \
       postgresql-dev \
       jpeg-dev \
-      zlib-dev
+      zlib-dev \
+      libwebp-dev
 
 WORKDIR /journal
 COPY ./requirements.txt .

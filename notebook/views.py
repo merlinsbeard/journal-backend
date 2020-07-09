@@ -12,7 +12,7 @@ class PageList(generics.ListCreateAPIView):
     serializer_class = PageSerializer
 
     def get_queryset(self):
-        qs = Page.objects.filter(is_active=True).order_by('-date_updated')
+        qs = Page.objects.filter(is_active=True).order_by('-date_created')
         tags = self.request.query_params.get('tags', None)
         if tags:
             tags = tags.split(',')
