@@ -41,11 +41,13 @@ class Work(models.Model):
 
     @property
     def banner_append(self):
-        banner = self.banner
-        google_storage = 'storages.backends.gcloud.GoogleCloudStorage'
-        if settings.DEFAULT_FILE_STORAGE == google_storage:
-            return f"{settings.GS_URL}{banner.name}"
-        return banner.url
+        if self.banner:
+            banner = self.banner
+            google_storage = 'storages.backends.gcloud.GoogleCloudStorage'
+            if settings.DEFAULT_FILE_STORAGE == google_storage:
+                return f"{settings.GS_URL}{banner.name}"
+            return banner.url
+        return None
 
 
 class Technology(models.Model):
