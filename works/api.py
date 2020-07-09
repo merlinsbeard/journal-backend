@@ -40,26 +40,30 @@ class WorkViewset(
 ):
 
     class WorkSerializer(serializers.ModelSerializer):
-        images = ImageSerializer(many=True, read_only=True)
+        # images = ImageSerializer(many=True, read_only=True)
         techs = TechnologySerializer(many=True, validators=None)
         order = serializers.IntegerField(required=False)
         slug = serializers.SlugField(required=False)
         techs = serializers.SlugRelatedField(
             many=True, read_only=False, write_only=False,
             queryset=Technology.objects.all(), slug_field="name")
+        banner_append = serializers.ReadOnlyField()
 
         class Meta:
             model = Work
             fields = '__all__'
             extra_kwargs = {
-                'techs': {'validators': []}
+                'techs': {'validators': []},
+                'banner': {'write_only': True}
             }
+
 
         def create(self, validated_data):
             techs_data = validated_data.pop('techs', '')
             work = Work.objects.create(**validated_data)
             create_or_get_tech(work, techs_data)
             return work
+
 
     def update(self, request, *args, **kwargs):
         """ Create or get the tech tag first then perform the update operation """
