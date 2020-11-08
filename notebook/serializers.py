@@ -22,7 +22,7 @@ class TagSerializer(serializers.ModelSerializer):
 class PageSerializer(serializers.ModelSerializer):
 
     banner = serializers.ImageField(max_length=None, required=False),
-    slug= serializers.SlugField(required=False)
+    slug = serializers.SlugField(required=False)
     content_html = serializers.ReadOnlyField(source="html_content")
     tags = TagSerializer(many=True)
     content = serializers.SerializerMethodField()
@@ -53,6 +53,3 @@ class PageSerializer(serializers.ModelSerializer):
             )
             page.tags.add(tag)
         return page
-
-    def get_content(self, obj):
-        return obj.html_content
